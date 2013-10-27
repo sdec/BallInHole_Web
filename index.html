@@ -1,0 +1,44 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ball In Hole // Sander Decoster</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="js/ballinhole.js" type="text/javascript"></script>
+        <link type="text/css" rel="stylesheet" href="css/ballinhole.css" />
+    </head>
+    <body onload="init();">
+        <table id="wrapper">
+            <tr>
+                <td id="content">
+                    <table id="tbl-content">
+                        <tr>
+                            <td id="top"><img src="img/title.png" /><span id="timer">00:00</span></td>
+                        </tr>
+                        <tr>
+                            <td id="middle">
+                                <canvas id="canvas"></canvas>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="controls">
+                                <table>
+                                    <tr>
+                                        <td class="button" id="play" onclick="Javascript:playGame();"></td>
+                                        <td class="button" id="pause" onclick="Javascript:pauseGame();"></td>
+                                        <td class="button" id="stop" onclick="Javascript:stopGame();"></td>
+                                        <td class="button" id="highscores" onclick="Javascript:highscores();"></td>
+                                        <td class="button" id="help" onclick="Javascript:help();"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
