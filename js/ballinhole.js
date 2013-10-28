@@ -1,4 +1,4 @@
-var FPS = 25;
+var TIMER_SPEED = 5;
 var BALL_SPEED = 5;
 var HOLE_DIFFICULTY = 1.3;
 var MAX_HIGHSCORES = 20;
@@ -39,15 +39,40 @@ function addEventListeners() {
 }
 
 function onDeviceOrientationChange(event) {
-    lastOrientation.gamma = event.gamma;
-    lastOrientation.beta = event.beta;
+    if(game.state === 1) {
+        
+        var shiftX = event.gamma;
+        var shiftY = event.beta;
+        switch(window.orientation) {
+            case 180: // Ondersteboven
+                shiftX *= -1;
+                shiftY *= -1;
+                break;
+            case 90: // Naar links gedraaid
+                var tmp = shiftX;
+                shiftX = shiftY;
+                shiftY = -tmp;
+                break;
+            case -90: // Naar rechts gedraaid
+                var tmp = shiftX;
+                shiftX = -shiftY;
+                shiftY = tmp;
+                break;
+        }
+        
+        ball.x += shiftX;
+        ball.y += shiftY;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawHole();
+        drawBall();
+    }
 }
 
 function onResize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight * 0.7;
-    document.getElementById('timer').style.fontSize =
-            (window.innerHeight * 0.10) + "px";
+    document.getElementById('timer').style.fontSize = (window.innerHeight * 0.10) + "px";
 }
 
 function initGame() {
@@ -56,7 +81,7 @@ function initGame() {
 
 function clearGame() {
     game = {
-        speed: 1000 / FPS,
+        speed: 1000 / TIMER_SPEED,
         timepassed: 0,
         state: 0
     };
@@ -99,37 +124,6 @@ function initHole() {
 }
 
 function loop() {
-
-    var xDelta, yDelta;
-    switch (window.orientation) {
-        case 0:
-            xDelta = lastOrientation.gamma;
-            yDelta = lastOrientation.beta;
-            break;
-        case 180:
-            xDelta = lastOrientation.gamma * -1;
-            yDelta = lastOrientation.beta * -1;
-            break;
-        case 90:
-            xDelta = lastOrientation.beta;
-            yDelta = lastOrientation.gamma * -1;
-            break;
-        case -90:
-            xDelta = lastOrientation.beta * -1;
-            yDelta = lastOrientation.gamma;
-            break;
-        default:
-            xDelta = lastOrientation.gamma;
-            yDelta = lastOrientation.beta;
-    }
-
-    ball.x += xDelta;
-    ball.y += yDelta;
-
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawHole();
-    drawBall();
-
     if (ballInHole()) {
         var time = game.timepassed;
         stopGame();
@@ -208,6 +202,8 @@ function playGame() {
         game.state = 1;
         gameloop = setInterval(loop, game.speed);
         changeGameState();
+        drawHole();
+        drawBall();
     }
 }
 
@@ -313,9 +309,9 @@ function highscores() {
             highscoresMap[index] = highscores[index];
         }
 
-        rank++;
         if (rank === MAX_HIGHSCORES)
             break;
+        rank++;
     }
 
     var highscoreMapKeys = Object.keys(highscoresMap);
